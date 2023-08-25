@@ -26,6 +26,12 @@ class Product extends Model
         return $selectProducts;
     }
 
+    public function getSpecificProduct($id) {
+
+        $getProductById = DB::select('SELECT * FROM `products` WHERE `products`.`id` = ?', [$id]);
+        return $getProductById;
+    }
+
     public function addProduct($product_name, $product_description, $product_place, $product_delivery) {
 
         $insert = DB::insert('INSERT INTO `products` (product_name, product_description, product_place, product_delivery) VALUES (?, ?, ?, ?)', [

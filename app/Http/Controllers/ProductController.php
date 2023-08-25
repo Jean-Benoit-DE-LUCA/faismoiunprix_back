@@ -21,6 +21,16 @@ class ProductController extends Controller
         return json_encode($getProducts);
     }
 
+    public function getProductById($product_id) {
+
+        $productObj = new Product();
+        $getSpecificProduct = $productObj->getSpecificProduct($product_id);
+
+        return json_encode([
+            'productFound' => $getSpecificProduct
+        ]);
+    }
+
     public function insertProduct(Request $request) {
 
         $headers = getallheaders();

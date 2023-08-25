@@ -24,6 +24,7 @@ use App\Http\Controllers\UserController;
 // PRODUCTS //
 
 Route::get('/getproducts', [ProductController::class, 'getProducts']);
+Route::get('/getproducts/{product_id}', [ProductController::class, 'getProductById']);
 Route::post('/insertproduct', [ProductController::class, 'insertProduct']);
 
 // USERS
