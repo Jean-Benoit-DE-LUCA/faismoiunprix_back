@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\OfferController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,10 @@ Route::get('/getproducts', [ProductController::class, 'getProducts']);
 Route::get('/getproducts/{product_id}', [ProductController::class, 'getProductById']);
 Route::post('/insertproduct', [ProductController::class, 'insertProduct']);
 
-// USERS
+// USERS //
 
 Route::post('/getuser/{user_mail}', [UserController::class, 'getUser']);
+
+// OFFERS //
+
+Route::post('/insertoffer', [OfferController::class, 'insertOffer']);

@@ -46,6 +46,7 @@ class UserController extends Controller
             return json_encode([
                 'user_mail' => $getUser[0]->user_mail,
                 'user_name' => $getUser[0]->user_name,
+                'user_id' => $getUser[0]->id,
                 'user_role' => $getUser[0]->user_role,
                 'jwt' => $jwt
             ]);
