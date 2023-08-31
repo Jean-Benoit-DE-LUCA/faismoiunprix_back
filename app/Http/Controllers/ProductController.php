@@ -64,6 +64,11 @@ class ProductController extends Controller
                         htmlspecialchars($request->get('place_product')),
                         $delivery
                     );
+
+                    return json_encode([
+                        "response" => $flag,
+                        "lastInsertId" => $addProduct
+                    ]);
                 }
 
                 catch (\Exception $e) {
@@ -84,5 +89,47 @@ class ProductController extends Controller
                 "response" => false
             ]);
         }
+    }
+
+    public function insertProductImagesFolder(Request $request) {
+
+        $arrayImages = [];
+        $countImages = 0;
+
+        foreach ($request->all() as $key => $value) {
+
+            if (str_starts_with($key, "image")) {
+
+                $countImages++;
+
+                $arrayImages[$key] = [
+                    $request->file($key)->getClientOriginalName(),
+                    $request->file($key)->getPathName(),
+                    $request->file($key)->getClientOriginalExtension(),
+                    $request->file($key)->getSize(),
+                    time() . '_' . $request->file($key)->getClientOriginalName()
+                ];
+                $request->file($key)->move('assets/images', time() . '_' . $request->file($key)->getClientOriginalName());
+            }
+        }
+
+        if ($countImages > 0) {
+
+            $last_insert_id = str_replace('/api/insertproductimages/folder/', '', $_SERVER['PATH_INFO']);
+            $arrayImagesNames = [];
+
+            foreach ($arrayImages as $key => $value) {
+
+                array_push($arrayImagesNames, $value[count($value) - 1]);
+            }
+
+            $this->updateProductImagesDatabase($last_insert_id, implode(',', $arrayImagesNames));
+        }
+    }
+
+    public function updateProductImagesDatabase ($last_insert_id, $stringArrayImagesNames) {
+
+        $productObj = new Product();
+        $updateImagesDatabase = $productObj->updateImagesDatabase($last_insert_id, $stringArrayImagesNames);
     }
 }

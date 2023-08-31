@@ -26,7 +26,9 @@ use App\Http\Controllers\OfferController;
 
 Route::get('/getproducts', [ProductController::class, 'getProducts']);
 Route::get('/getproducts/{product_id}', [ProductController::class, 'getProductById']);
+
 Route::post('/insertproduct', [ProductController::class, 'insertProduct']);
+Route::post('/insertproductimages/folder/{last_insert_id}', [ProductController::class, 'insertProductImagesFolder']);
 
 // USERS //
 
