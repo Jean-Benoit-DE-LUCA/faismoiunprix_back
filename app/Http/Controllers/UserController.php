@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 use Firebase\JWT\JWT;
 
@@ -22,7 +23,7 @@ class UserController extends Controller
             ]);
         }
 
-        if ($getUser[0]->user_password == $request->input('user_password')) {
+        if (Hash::check($request->input('user_password'), $getUser[0]->user_password)) {
 
             require '../config.php';
             require_once('../vendor/autoload.php');
@@ -46,16 +47,53 @@ class UserController extends Controller
             return json_encode([
                 'user_mail' => $getUser[0]->user_mail,
                 'user_name' => $getUser[0]->user_name,
+                'user_firstname' => $getUser[0]->user_firstname,
+                'user_address' => $getUser[0]->user_address,
+                'user_zip' => $getUser[0]->user_zip,
+                'user_phone' => $getUser[0]->user_phone,
                 'user_id' => $getUser[0]->id,
                 'user_role' => $getUser[0]->user_role,
                 'jwt' => $jwt
             ]);
         }
 
-        else if ($getUser[0]->user_password !== $request->input('user_password')) {
+        else if (!Hash::check($request->input('user_password'), $getUser[0]->user_password)) {
             return json_encode([
                 'userPass' => false
             ]);
         }
+    }
+
+    public function registerUser(Request $request) {
+
+        $requestExtract = extract($request->all());
+
+        $userObj = new User();
+        $getUser = $userObj->selectUserMail($email);
+
+        $message = "";
+        $flag = NULL;
+
+        if (count($getUser) !== 0) {
+
+            $message = "Email déjà enregistré";
+            $flag = false;
+        }
+
+        else if (count($getUser) == 0) {
+
+            if ($password == $password_confirmation) {
+                
+                $insertUser = $userObj->insertUser($name, $firstName, $email, $address, $zip, $phone, Hash::make($password), "admin");
+
+                $message = "Inscription effectuée avec succès";
+                $flag = true;
+            }
+        }
+
+        return json_encode([
+            "message" => $message,
+            "flag" => $flag
+        ]);
     }
 }

@@ -33,6 +33,7 @@ Route::post('/insertproductimages/folder/{last_insert_id}', [ProductController::
 // USERS //
 
 Route::post('/getuser/{user_mail}', [UserController::class, 'getUser']);
+Route::post('/registeruser', [UserController::class, 'registerUser']);
 
 // OFFERS //
 

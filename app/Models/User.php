@@ -50,4 +50,9 @@ class User extends Authenticatable
         $getUser = DB::select('SELECT * FROM `users` WHERE `users`.`user_mail` = ?', [$email]);
         return $getUser;
     }
+
+    public function insertUser($name, $firstName, $email, $address, $zip, $phone, $password, $role = 'member') {
+
+        $insertUser = DB::insert('INSERT INTO `users` (user_name, user_firstname, user_mail, user_address, user_zip, user_phone, user_password, user_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [$name, $firstName, $email, $address, $zip, $phone, $password, $role]);
+    }
 }
