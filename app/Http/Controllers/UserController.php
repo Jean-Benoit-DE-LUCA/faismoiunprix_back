@@ -76,24 +76,51 @@ class UserController extends Controller
 
         if (count($getUser) !== 0) {
 
-            $message = "Email déjà enregistré";
+            $message = 'Email déjà enregistré';
             $flag = false;
+
+            return json_encode([
+                'message' => $message,
+                'flag' => $flag
+            ]);
         }
 
         else if (count($getUser) == 0) {
 
             if ($password == $password_confirmation) {
-                
-                $insertUser = $userObj->insertUser($name, $firstName, $email, $address, $zip, $phone, Hash::make($password), "admin");
 
-                $message = "Inscription effectuée avec succès";
+                require '../config.php';
+                require_once('../vendor/autoload.php');
+    
+                $secret_key = $data['JWT_SECRET_KEY'];
+                $time = time();
+                $expire_at = time() + 1200;
+                $server_name = $_SERVER["SERVER_NAME"];
+                //$user_name = $getUser[0]->user_name;
+    
+                $payload = [
+                    'iss' => $server_name,
+                    'aud' => $server_name,
+                    'iat' => $time,
+                    'nbf' => $time,
+                    'exp' => $expire_at
+                ];
+    
+                $jwt = JWT::encode($payload, $secret_key, 'HS256');
+                
+                $insertUser = $userObj->insertUser($name, $firstName, $email, $address, $zip, $phone, Hash::make($password), 'member');
+
+                $message = 'Inscription effectuée avec succès';
+                $getInsertedUser = $userObj->selectUserMail($email);
                 $flag = true;
+
+                return json_encode([
+                    'message' => $message,
+                    'user' => $getInsertedUser,
+                    'jwt' => $jwt,
+                    'flag' => $flag
+                ]);
             }
         }
-
-        return json_encode([
-            "message" => $message,
-            "flag" => $flag
-        ]);
     }
 }
