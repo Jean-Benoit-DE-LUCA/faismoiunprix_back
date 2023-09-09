@@ -62,7 +62,8 @@ class ProductController extends Controller
                         htmlspecialchars($request->get('name_product')),
                         htmlspecialchars($request->get('description_product')),
                         htmlspecialchars($request->get('place_product')),
-                        $delivery
+                        $delivery,
+                        $request->get('user_id')
                     );
 
                     return json_encode([

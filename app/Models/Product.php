@@ -18,7 +18,8 @@ class Product extends Model
         'product_description',
         'product_place',
         'product_delivery',
-        'product_photos'
+        'product_photos',
+        'user_id'
     ];
 
     public function selectProducts() {
@@ -33,13 +34,14 @@ class Product extends Model
         return $getProductById;
     }
 
-    public function addProduct($product_name, $product_description, $product_place, $product_delivery) {
+    public function addProduct($product_name, $product_description, $product_place, $product_delivery, $user_id) {
 
-        $insert = DB::insert('INSERT INTO `products` (product_name, product_description, product_place, product_delivery) VALUES (?, ?, ?, ?)', [
+        $insert = DB::insert('INSERT INTO `products` (product_name, product_description, product_place, product_delivery, user_id) VALUES (?, ?, ?, ?, ?)', [
             $product_name,
             $product_description,
             $product_place,
-            $product_delivery
+            $product_delivery,
+            $user_id
         ]);
         return DB::getPdo()->lastInsertId();
     }
