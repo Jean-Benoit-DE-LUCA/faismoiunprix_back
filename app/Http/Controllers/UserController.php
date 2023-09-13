@@ -96,7 +96,6 @@ class UserController extends Controller
                 $time = time();
                 $expire_at = time() + 1200;
                 $server_name = $_SERVER["SERVER_NAME"];
-                //$user_name = $getUser[0]->user_name;
     
                 $payload = [
                     'iss' => $server_name,

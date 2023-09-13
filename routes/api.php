@@ -38,3 +38,6 @@ Route::post('/registeruser', [UserController::class, 'registerUser']);
 // OFFERS //
 
 Route::post('/insertoffer', [OfferController::class, 'insertOffer']);
+Route::get('/getuserofferssent/{user_id}', [OfferController::class, 'getUserOffersSent']);
+Route::get('/getuseroffersreceived/{user_id}', [OfferController::class, 'getUserOffersReceived']);
+Route::get('/getoffer/{offer_id}', [OfferController::class, 'getOfferId']);

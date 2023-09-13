@@ -33,59 +33,33 @@ class ProductController extends Controller
 
     public function insertProduct(Request $request) {
 
-        $headers = getallheaders();
+        if (JWTController::checkJWT()) {
 
-        if (array_key_exists('Authorization', $headers)) {
-
-            if (preg_match('/Bearer/', $headers['Authorization'], $matches)) {
-
-                require '../config.php';
-                require_once('../vendor/autoload.php');
-
-                $flag = true;
-
-                try {
-
-                    $token = JWT::decode(str_replace('Bearer ', '', $headers['Authorization']), new Key($data['JWT_SECRET_KEY'], 'HS256'));
-                    $flag = true;
-
-                    if ($request->get('delivery_product') == 'yes') {
-                        $delivery = 1;
-                    }
-
-                    else if ($request->get('delivery_product') == 'no') {
-                        $delivery = 0;
-                    }
-
-                    $productObj = new Product();
-                    $addProduct = $productObj->addProduct(
-                        htmlspecialchars($request->get('name_product')),
-                        htmlspecialchars($request->get('description_product')),
-                        htmlspecialchars($request->get('place_product')),
-                        $delivery,
-                        $request->get('user_id')
-                    );
-
-                    return json_encode([
-                        "response" => $flag,
-                        "lastInsertId" => $addProduct
-                    ]);
-                }
-
-                catch (\Exception $e) {
-
-                    $flag = false;
-                }
-
-                return json_encode([
-                    "response" => $flag
-                ]);
-                
+            if ($request->get('delivery_product') == 'yes') {
+                $delivery = 1;
             }
-            
+
+            else if ($request->get('delivery_product') == 'no') {
+                $delivery = 0;
+            }
+
+            $productObj = new Product();
+            $addProduct = $productObj->addProduct(
+                htmlspecialchars($request->get('name_product')),
+                htmlspecialchars($request->get('description_product')),
+                htmlspecialchars($request->get('place_product')),
+                $delivery,
+                $request->get('user_id')
+            );
+
+            return json_encode([
+                "response" => true,
+                "lastInsertId" => $addProduct
+            ]);
         }
 
         else {
+
             return json_encode([
                 "response" => false
             ]);
