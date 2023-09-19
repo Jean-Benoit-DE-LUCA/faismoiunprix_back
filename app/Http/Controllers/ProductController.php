@@ -21,6 +21,13 @@ class ProductController extends Controller
         return json_encode($getProducts);
     }
 
+    public function getMyProducts($user_id) {
+
+        $productObj = new Product();
+        $getMyProducts = $productObj->selectMyProducts($user_id);
+        return json_encode($getMyProducts);
+    }
+
     public function getProductById($product_id) {
 
         $productObj = new Product();

@@ -24,8 +24,23 @@ class Product extends Model
 
     public function selectProducts() {
 
-        $selectProducts = DB::select('SELECT * FROM `products`');
+        $selectProducts = DB::select('SELECT *
+                                    FROM `products`
+                                    WHERE `products`.`id`
+                                    NOT IN
+                                    (SELECT DISTINCT `products`.`id`
+                                    FROM `products` 
+                                    INNER JOIN `products_offers` ON `products_offers`.`product_id` = `products`.`id`
+                                    WHERE `products_offers`.`offer_accepted` = 1);');
+
         return $selectProducts;
+    }
+
+    public function selectMyProducts($user_id) {
+
+        $selectMyProducts = DB::select('SELECT * FROM `products` WHERE `products`.`user_id` = ?', [$user_id]);
+
+        return $selectMyProducts;
     }
 
     public function getSpecificProduct($id) {

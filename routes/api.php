@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OfferController;
+use App\Http\Controllers\ProductOfferController;
+use App\Http\Controllers\OfferMessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +27,7 @@ use App\Http\Controllers\OfferController;
 // PRODUCTS //
 
 Route::get('/getproducts', [ProductController::class, 'getProducts']);
+Route::get('/getmyproducts/{user_id}', [ProductController::class, 'getMyProducts']);
 Route::get('/getproducts/{product_id}', [ProductController::class, 'getProductById']);
 
 Route::post('/insertproduct', [ProductController::class, 'insertProduct']);
@@ -41,3 +44,12 @@ Route::post('/insertoffer', [OfferController::class, 'insertOffer']);
 Route::get('/getuserofferssent/{user_id}', [OfferController::class, 'getUserOffersSent']);
 Route::get('/getuseroffersreceived/{user_id}', [OfferController::class, 'getUserOffersReceived']);
 Route::get('/getoffer/{offer_id}', [OfferController::class, 'getOfferId']);
+
+// PRODUCTS_OFFERS //
+
+Route::post('/updateproductofferofferaccepted', [ProductOfferController::class, 'updateProductOfferOfferAccepted']);
+
+// OFFERS_MESSAGES //
+
+Route::post('/insertoffermessage', [OfferMessageController::class, 'insertOfferMessage']);
+Route::get('/getoffersmessages/{offer_id}', [OfferMessageController::class, 'getOffersMessagesById']);
