@@ -26,7 +26,7 @@ class Product_Offer extends Model
         ]);
     }
 
-    public function updateProdOffOfferAccepted($offer_accepted = 1, $product_id, $offer_id) {
+    public function updateProdOffOfferAccepted($offer_accepted, $product_id, $offer_id) {
 
         $updateProdOffAccept = DB::update('UPDATE `products_offers` SET `products_offers`.`offer_accepted` = ? WHERE `products_offers`.`product_id` = ? AND `products_offers`.`offer_id` = ?', [$offer_accepted, $product_id, $offer_id]);
     }

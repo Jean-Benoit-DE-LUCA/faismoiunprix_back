@@ -14,6 +14,7 @@ use Firebase\JWT\Key;
 
 class ProductController extends Controller
 {
+
     public function getProducts() {
 
         $productObj = new Product();
@@ -113,5 +114,145 @@ class ProductController extends Controller
 
         $productObj = new Product();
         $updateImagesDatabase = $productObj->updateImagesDatabase($last_insert_id, $stringArrayImagesNames);
+    }
+
+
+
+    public function updateProduct(Request $request, $product_id) {
+
+        // SEPARATE FILE NAMES AND FILE OBJECT //
+
+        $newArrayFileNames = [];
+        $newArrayFiles = [];
+
+        foreach ($request->all() as $key => $element) {
+
+            if (str_starts_with($key, '_inp_input--')) {
+                $newArrayFileNames[$key] = $element;
+            }
+
+            else if (gettype($element) == 'object') {
+                $newArrayFiles[$key] = $element;
+            }
+
+            /*$newArrayResult[$key] = [
+                $element->getClientOriginalName(),
+                $element->getClientOriginalExtension(),
+                $element->getRealPath(),
+                $element->getSize(),
+                time() . '_' . $element->getClientOriginalName()
+            ];
+
+            $request->file($key)->move('assets/images', time() . '_' . $element->getClientOriginalName());*/
+        }
+
+
+
+        // CLEAR NAMES ARRAY //
+
+        $newArrayFileNamesNew = [];
+
+        foreach ($newArrayFileNames as $key => $fileName) {
+
+            if (str_contains($fileName, '/images/no_image.png')) {
+                $newArrayFileNamesNew[$key] = 'no_image';
+            }
+
+            else if (str_contains($fileName, 'http://127.0.0.1:8000/assets/images/')) {
+                $newArrayFileNamesNew[$key] = str_replace('http://127.0.0.1:8000/assets/images/', '', $fileName);
+            }
+
+            else if (str_contains($fileName, 'data:image/')) {
+                $keys = array_keys($newArrayFiles);
+
+                for ($i = 0; $i < count($keys); $i++) {
+
+                    if (str_contains($keys[$i], $key)) {
+                        $newArrayFileNamesNew[$key] = strrev(substr_replace(
+                            strrev(time() . '_' . trim(str_replace($key, '', $keys[$i]))),
+                            '.',
+                            strpos(strrev(time() . '_' . trim(str_replace($key, '', $keys[$i]))), '_'),
+                            1
+                        ));
+                    }
+                }
+            }
+        }
+
+
+
+        // GET PREPARED ARRAY IMPLODE TO INSERT WITH NEW PICTURES NAMES //
+
+
+        $newArrayFileNamesToInsert = [];
+
+        foreach ($newArrayFileNamesNew as $key => $value) {
+
+            if ($newArrayFileNamesNew[$key] == 'no_image') {
+                unset($newArrayFileNamesNew[$key]);
+            }
+
+            else {
+                $newArrayFileNamesToInsert[] = $newArrayFileNamesNew[$key];
+            }
+        }
+
+
+
+        // RENAME KEY NAME FILES ARRAY //
+
+        $renameArray = [];
+
+        foreach ($newArrayFileNamesNew as $key => $value) {
+
+            foreach ($newArrayFiles as $keyFile => $valueFile) {
+
+                if (str_contains($keyFile, $key)) {
+
+                    $renameArray[$value] = $valueFile;
+                }
+            }
+        }
+
+
+
+        // UPLOAD NEW FILES //
+
+        $arrayExtensions = ['jpg', 'jpeg', 'bmp', 'gif', 'png', 'svg'];
+
+        $arraySize = [];
+
+        foreach ($renameArray as $key => $value) {
+
+            if ($value->getSize() < 5000000) {
+
+                if (in_array($value->getClientOriginalExtension(), $arrayExtensions)) {
+
+                    //$value->move('assets/images', $key);
+                }
+            }
+        }
+
+
+
+        // RETRIEVE OLD IMAGES ARRAY FROM DATABASE //
+
+        $objProduct = new Product();
+        $getProduct = $objProduct->getSpecificProduct($product_id);
+
+        $arrayFileNamesOld = explode(',', $getProduct[0]->product_photos);
+
+
+        return json_encode([
+            //'arrayFileNames' => $newArrayFileNames,
+            //'arrayFiles' => $newArrayFiles,
+            'newArrayFileNamesNew' => $newArrayFileNamesNew,
+            'arrayFileNamesToInsert' => implode(',', $newArrayFileNamesToInsert),
+            'arrayFileNamesToInsertArray' => $newArrayFileNamesToInsert,
+            'product_id' => $product_id,
+            'renameArray' => $renameArray,
+            'arrayProduct' => $getProduct,
+            'arrayFileNamesOld' => $arrayFileNamesOld,
+        ]);
     }
 }

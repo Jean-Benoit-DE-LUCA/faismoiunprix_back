@@ -21,7 +21,12 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'user_name',
+        'user_firstname',
         'user_mail',
+        'user_address',
+        'user_zip',
+        'user_city',
+        'user_phone',
         'user_password',
         'user_role',
     ];
@@ -51,8 +56,8 @@ class User extends Authenticatable
         return $getUser;
     }
 
-    public function insertUser($name, $firstName, $email, $address, $zip, $phone, $password, $role = 'member') {
+    public function insertUser($name, $firstName, $email, $address, $zip, $city, $phone, $password, $role = 'member') {
 
-        $insertUser = DB::insert('INSERT INTO `users` (user_name, user_firstname, user_mail, user_address, user_zip, user_phone, user_password, user_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [$name, $firstName, $email, $address, $zip, $phone, $password, $role]);
+        $insertUser = DB::insert('INSERT INTO `users` (user_name, user_firstname, user_mail, user_address, user_zip, user_city, user_phone, user_password, user_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [$name, $firstName, $email, $address, $zip, $city, $phone, $password, $role]);
     }
 }

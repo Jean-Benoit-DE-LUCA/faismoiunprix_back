@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OfferController;
@@ -33,6 +34,8 @@ Route::get('/getproducts/{product_id}', [ProductController::class, 'getProductBy
 Route::post('/insertproduct', [ProductController::class, 'insertProduct']);
 Route::post('/insertproductimages/folder/{last_insert_id}', [ProductController::class, 'insertProductImagesFolder']);
 
+Route::post('/updateproduct/{product_id}', [ProductController::class, 'updateProduct']);
+
 // USERS //
 
 Route::post('/getuser/{user_mail}', [UserController::class, 'getUser']);
@@ -53,3 +56,7 @@ Route::post('/updateproductofferofferaccepted', [ProductOfferController::class, 
 
 Route::post('/insertoffermessage', [OfferMessageController::class, 'insertOfferMessage']);
 Route::get('/getoffersmessages/{offer_id}', [OfferMessageController::class, 'getOffersMessagesById']);
+
+// CONTACT //
+
+Route::post('/sendcontactmail', [ContactController::class, 'sendContactMail']);

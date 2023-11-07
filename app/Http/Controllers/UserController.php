@@ -50,6 +50,7 @@ class UserController extends Controller
                 'user_firstname' => $getUser[0]->user_firstname,
                 'user_address' => $getUser[0]->user_address,
                 'user_zip' => $getUser[0]->user_zip,
+                'user_city' => $getUser[0]->user_city,
                 'user_phone' => $getUser[0]->user_phone,
                 'user_id' => $getUser[0]->id,
                 'user_role' => $getUser[0]->user_role,
@@ -89,36 +90,48 @@ class UserController extends Controller
 
             if ($password == $password_confirmation) {
 
-                require '../config.php';
-                require_once('../vendor/autoload.php');
-    
-                $secret_key = $data['JWT_SECRET_KEY'];
-                $time = time();
-                $expire_at = time() + 1200;
-                $server_name = $_SERVER["SERVER_NAME"];
-    
-                $payload = [
-                    'iss' => $server_name,
-                    'aud' => $server_name,
-                    'iat' => $time,
-                    'nbf' => $time,
-                    'exp' => $expire_at
-                ];
-    
-                $jwt = JWT::encode($payload, $secret_key, 'HS256');
-                
-                $insertUser = $userObj->insertUser($name, $firstName, $email, $address, $zip, $phone, Hash::make($password), 'member');
+                try {
 
-                $message = 'Inscription effectuée avec succès';
-                $getInsertedUser = $userObj->selectUserMail($email);
-                $flag = true;
+                    require '../config.php';
+                    require_once('../vendor/autoload.php');
+        
+                    $secret_key = $data['JWT_SECRET_KEY'];
+                    $time = time();
+                    $expire_at = time() + 1200;
+                    $server_name = $_SERVER["SERVER_NAME"];
+        
+                    $payload = [
+                        'iss' => $server_name,
+                        'aud' => $server_name,
+                        'iat' => $time,
+                        'nbf' => $time,
+                        'exp' => $expire_at
+                    ];
+        
+                    $jwt = JWT::encode($payload, $secret_key, 'HS256');
+                    
+                    $insertUser = $userObj->insertUser($name, $firstName, $email, $address, $zip, $city, $phone, Hash::make($password), 'member');
 
-                return json_encode([
-                    'message' => $message,
-                    'user' => $getInsertedUser,
-                    'jwt' => $jwt,
-                    'flag' => $flag
-                ]);
+                    $message = 'Inscription effectuée avec succès';
+                    $getInsertedUser = $userObj->selectUserMail($email);
+                    $flag = true;
+
+                    return json_encode([
+                        'message' => $message,
+                        'user' => $getInsertedUser,
+                        'jwt' => $jwt,
+                        'flag' => $flag
+                        ]);
+                }
+
+                catch (\Exception $e) {
+
+                    return json_encode([
+                        'message' => 'Erreur lors de l\'inscription',
+                        'flag' => false
+                    ]);
+                }
+
             }
         }
     }
