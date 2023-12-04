@@ -25,4 +25,9 @@ class OfferNegotiate extends Model
             $user_id
         ]);
     }
+
+    public function deleteByOfferId($offer_id) {
+
+        $delete = DB::delete('DELETE FROM `offers_negotiate` WHERE `offers_negotiate`.`offer_id` = ?', [$offer_id]);
+    }
 }

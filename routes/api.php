@@ -36,10 +36,13 @@ Route::post('/insertproductimages/folder/{last_insert_id}', [ProductController::
 
 Route::post('/updateproduct/{product_id}', [ProductController::class, 'updateProduct']);
 
+Route::delete('deleteproduct/{product_id}', [ProductController::class, 'deleteProduct']);
+
 // USERS //
 
 Route::post('/getuser/{user_mail}', [UserController::class, 'getUser']);
 Route::post('/registeruser', [UserController::class, 'registerUser']);
+Route::put('/updateuser/{user_id}', [UserController::class, 'updateUser']);
 
 // OFFERS //
 

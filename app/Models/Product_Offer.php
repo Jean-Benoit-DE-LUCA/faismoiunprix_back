@@ -30,4 +30,9 @@ class Product_Offer extends Model
 
         $updateProdOffAccept = DB::update('UPDATE `products_offers` SET `products_offers`.`offer_accepted` = ? WHERE `products_offers`.`product_id` = ? AND `products_offers`.`offer_id` = ?', [$offer_accepted, $product_id, $offer_id]);
     }
+
+    public function deleteProductOfferByOfferId($offer_id) {
+
+        $delete = DB::delete('DELETE FROM `products_offers` WHERE `products_offers`.`offer_id` = ?', [$offer_id]);
+    }
 }

@@ -13,6 +13,7 @@ use Firebase\JWT\JWT;
 
 class UserController extends Controller
 {
+
     public function getUser(Request $request, $user_mail) {
         $userObj = new User();
         $getUser = $userObj->selectUserMail($user_mail);
@@ -134,5 +135,23 @@ class UserController extends Controller
 
             }
         }
+    }
+
+    public function updateUser(Request $request, $user_id) {
+
+        $userObj = new User();
+        $userObj->updateUser($user_id,
+                             htmlspecialchars($request->get('name')), 
+                             htmlspecialchars($request->get('firstName')), 
+                             htmlspecialchars($request->get('address')),
+                             htmlspecialchars($request->get('zip')),
+                             htmlspecialchars($request->get('city')), 
+                             htmlspecialchars($request->get('phone')), 
+                             Hash::make($request->get('password')));
+
+
+        return json_encode([
+            'flag' => true
+        ]);
     }
 }

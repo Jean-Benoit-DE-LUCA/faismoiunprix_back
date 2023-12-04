@@ -65,4 +65,20 @@ class Product extends Model
 
         $updateProductImages = DB::update('UPDATE `products` SET `products`.`product_photos` = ? WHERE `products`.`id` = ?', [$stringArrayImagesNames, $last_insert_id]);
     }
+
+    public function updateProductExceptPictures($product_id, $product_name, $product_description, $product_place, $product_delivery) {
+
+        $update = DB::update('UPDATE `products` SET `products`.`product_name` = ?, `products`.`product_description` = ?, `products`.`product_place` = ?, `products`.`product_delivery` = ? WHERE `products`.`id` = ?', [
+            $product_name,
+            $product_description,
+            $product_place,
+            $product_delivery,
+            $product_id
+        ]);
+    }
+
+    public function deleteProduct($product_id) {
+
+        $delete = DB::delete('DELETE FROM `products` WHERE `products`.`id` = ?', [$product_id]);
+    }
 }

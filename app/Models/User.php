@@ -60,4 +60,25 @@ class User extends Authenticatable
 
         $insertUser = DB::insert('INSERT INTO `users` (user_name, user_firstname, user_mail, user_address, user_zip, user_city, user_phone, user_password, user_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [$name, $firstName, $email, $address, $zip, $city, $phone, $password, $role]);
     }
+
+    public function updateUser($user_id, $name, $firstName, $address, $zip, $city, $phone, $password) {
+
+        $updateUser = DB::update('UPDATE `users` SET `users`.`user_name` = ?,
+                                                     `users`.`user_firstname` = ?,
+                                                     `users`.`user_address` = ?,
+                                                     `users`.`user_zip` = ?,
+                                                     `users`.`user_city` = ?,
+                                                     `users`.`user_phone` = ?,
+                                                     `users`.`user_password` = ?
+                                                WHERE `users`.`id` = ?', [
+                                                        $name,
+                                                        $firstName,
+                                                        $address,
+                                                        $zip,
+                                                        $city,
+                                                        $phone,
+                                                        $password,
+                                                        $user_id
+                                                     ]);
+    }
 }

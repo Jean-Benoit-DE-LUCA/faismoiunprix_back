@@ -34,4 +34,9 @@ class OfferMessage extends Model
 
         return $getOffMessById;
     }
+
+    public function deleteOffMess($id) {
+
+        $delete = DB::delete('DELETE FROM `offers_messages` WHERE `offers_messages`.`id` = ?', [$id]);
+    }
 }

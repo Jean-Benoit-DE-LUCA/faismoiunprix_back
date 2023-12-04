@@ -84,4 +84,16 @@ class Offer extends Model
 
         return $getOfferId;
     }
+
+    public function deleteOffers($product_id) {
+
+        $delete = DB::delete('DELETE FROM `offers` WHERE `offers`.`product_id` = ?', [$product_id]);
+    }
+
+    public function getOffersByProductId($product_id) {
+
+        $select = DB::select('SELECT * FROM `offers` WHERE `offers`.`product_id` = ?', [$product_id]);
+
+        return $select;
+    }
 }
